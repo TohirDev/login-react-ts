@@ -39,8 +39,8 @@ const RegisterPage = () => {
         }
       );
       const result = await response.json();
-      if (result) {
-        setData(result);
+      setData(result);
+      if (result.token !== undefined) {
         setToken(result.token);
         navigate("/");
       }
@@ -94,6 +94,21 @@ const RegisterPage = () => {
             </Button>
             <Typography sx={{ mt: 2 }} color="red">
               {data?.message}
+            </Typography>
+            <Typography
+              onClick={() => {
+                navigate("/login");
+              }}
+              variant="body1"
+              sx={{
+                color: "blue",
+                cursor: "pointer",
+                "&:hover": {
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              Sign In?
             </Typography>
           </CardContent>
         </Card>
