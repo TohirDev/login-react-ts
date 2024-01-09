@@ -1,14 +1,14 @@
 import {
+  Box,
   Button,
   Card,
   CardContent,
-  Grid,
   TextField,
   Typography,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { removeToken, setToken } from "../../lib/global";
+import { getUserToken, removeToken, setToken } from "../../lib/global";
 import { useForm } from "react-hook-form";
 
 type TInputFieldTypes = {
@@ -23,82 +23,82 @@ type TData = {
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+
+  const { register, handleSubmit } = useForm<TInputFieldTypes>();
+  const [data, setData] = useState<TData>();
+  const submitRegister = async (registerData: TInputFieldTypes) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registerData),
+        }
+      );
+      const result = await response.json();
+      if (result) {
+        setData(result);
+        setToken(result.token);
+        navigate("/");
+      }
+    } catch (error: unknown) {
+      removeToken();
+      console.log(error);
+      // throw new Error(error)
+    }
+  };
+
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    const userToken = getUserToken();
+    if (userToken) {
       navigate("/");
     }
   }, [navigate]);
-  const { register, handleSubmit } = useForm<TInputFieldTypes>();
-  const [data, setData] = useState<TData>();
-  const submitLogin = useCallback(
-    async (registerData: TInputFieldTypes) => {
-      fetch(`${import.meta.env.VITE_API_URL}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(registerData),
-      })
-        .then((response) => response.json())
-        .then((result: TData) => {
-          setData(result);
-          if (result.token !== undefined) {
-            setToken(result.token);
-            navigate("/");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          removeToken();
-        });
-    },
-    [navigate]
-  );
+
   return (
-    <Grid container>
-      <Grid
-        item
-        sm={12}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-        }}
-      >
-        <form onSubmit={handleSubmit((data) => submitLogin(data))}>
-          <Card sx={{ maxWidth: "500px", width: "500px" }}>
-            <CardContent>
-              <Typography variant="h3">Sign Up</Typography>
-              <TextField
-                {...register("username", { required: true })}
-                placeholder="Username"
-                fullWidth
-                sx={{ mt: 4 }}
-              />
-              <TextField
-                {...register("password", { required: true })}
-                placeholder="Password"
-                fullWidth
-                sx={{ mt: 4 }}
-              />
-              <Button
-                sx={{ mt: 4 }}
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                SUBMIT
-              </Button>
-              <Typography sx={{ mt: 2 }} color="red">
-                {data?.message}
-              </Typography>
-            </CardContent>
-          </Card>
-        </form>
-      </Grid>
-    </Grid>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <form onSubmit={handleSubmit((data) => submitRegister(data))}>
+        <Card sx={{ maxWidth: "500px", width: "500px" }}>
+          <CardContent>
+            <Typography variant="h3">Sign Up</Typography>
+            <TextField
+              {...register("username", { required: true })}
+              placeholder="Username"
+              fullWidth
+              sx={{ mt: 4 }}
+            />
+            <TextField
+              {...register("password", { required: true })}
+              placeholder="Password"
+              fullWidth
+              sx={{ mt: 4 }}
+            />
+            <Button
+              sx={{ mt: 4 }}
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
+              SUBMIT
+            </Button>
+            <Typography sx={{ mt: 2 }} color="red">
+              {data?.message}
+            </Typography>
+          </CardContent>
+        </Card>
+      </form>
+    </Box>
   );
 };
 

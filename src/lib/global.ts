@@ -6,4 +6,4 @@ export function removeToken() {
   localStorage.removeItem("token");
 }
 
-export const TOKEN = localStorage.getItem("token");
+export const getUserToken = () => localStorage.getItem("token");

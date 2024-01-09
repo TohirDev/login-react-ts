@@ -9,7 +9,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { removeToken, setToken } from "../../lib/global";
+import { getUserToken, removeToken, setToken } from "../../lib/global";
 
 type TInputFieldTypes = {
   username: string;
@@ -23,16 +23,14 @@ type TData = {
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, [navigate]);
+
   const { register, handleSubmit } = useForm<TInputFieldTypes>();
+
   const [data, setData] = useState<TData>();
+
   const submitLogin = useCallback(
     async (loginData: TInputFieldTypes) => {
-      fetch(`${import.meta.env.VITE_API_URL}/login`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,6 +40,7 @@ const LoginPage = () => {
         .then((response) => response.json())
         .then((result: TData) => {
           setData(result);
+
           if (result.token !== undefined) {
             setToken(result.token);
             navigate("/");
@@ -54,6 +53,11 @@ const LoginPage = () => {
     },
     [navigate]
   );
+
+  useEffect(() => {
+    const userToken = getUserToken();
+    if (userToken) navigate("/");
+  }, [navigate]);
 
   return (
     <Grid container>
