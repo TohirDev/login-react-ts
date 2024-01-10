@@ -1,5 +1,6 @@
-#Secret
+#.gitignore
 .env
+
 
 # Logs
 logs
