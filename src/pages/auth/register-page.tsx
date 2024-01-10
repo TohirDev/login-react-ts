@@ -46,8 +46,8 @@ const RegisterPage = () => {
       }
     } catch (error: unknown) {
       removeToken();
-      console.log(error);
-      // throw new Error(error)
+      console.error((error as Error).message);
+      throw new Error((error as Error).message);
     }
   };
 
