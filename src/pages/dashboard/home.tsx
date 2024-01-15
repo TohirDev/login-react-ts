@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { getUserToken, removeToken } from "../../lib/global";
 import { useNavigate } from "react-router-dom";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -13,8 +13,21 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <>
-      <Typography variant="h1">HomePage</Typography>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
+      <Typography variant="h3">Logo</Typography>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Typography sx={{ mx: 2 }}>Home</Typography>
+        <Typography sx={{ mx: 2 }}>About</Typography>
+        <Typography sx={{ mx: 2 }}>Service</Typography>
+        <Typography sx={{ mx: 2 }}>Shop</Typography>
+        <Typography sx={{ mx: 2 }}>Contact</Typography>
+      </Box>
       <Button
         variant="contained"
         color="error"
@@ -25,7 +38,7 @@ const HomePage = () => {
       >
         Log Out
       </Button>
-    </>
+    </Box>
   );
 };
 
