@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 import { Button, Collapse, CollapseProps } from "antd";
 import useFetch from "../../hooks/useFetch";
+import Slider from "../../components/Slider";
 const HomePage = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -69,6 +70,7 @@ const HomePage = () => {
       </Box>
       <Button type="primary">aasdf</Button>
       <Collapse items={items} defaultActiveKey={["1"]} />
+      <Slider />
     </>
   );
 };
