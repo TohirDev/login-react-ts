@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { Button, Collapse, CollapseProps } from "antd";
 import useFetch from "../../hooks/useFetch";
 import Slider from "../../components/Slider";
+import useDebouncer from "../../hooks/useDebouncer";
 const HomePage = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -42,6 +43,12 @@ const HomePage = () => {
 
   const { data } = useFetch({ url: "https://dummyjson.com/products" });
   if (data !== undefined) console.log(data);
+
+  const handleChange = function() {
+    console.log('hihihihi')
+  }
+
+  useDebouncer(handleChange, 5000)
   return (
     <>
       <Box
